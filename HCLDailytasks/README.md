@@ -16,20 +16,19 @@ This module contains standalone daily Java exercises and core programming assign
 ## Execution Screenshots
 
 ### Day 1 - Platform Info
-![Day 1 Platform Info](HCLDailytasks/screenshots/day1.png)
+![Day 1 Platform Info](screenshots/day1.png)
 
 ### Day 2 - Text Analyzer
-![Day 2 Text Analyzer](HCLDailytasks/screenshots/day2.png)
+![Day 2 Text Analyzer](screenshots/day2.png)
 
 ### Day 3 - Monthly Usage Analyser
-![Day 3 Monthly Usage](HCLDailytasks/screenshots/day3.png)
+![Day 3 Monthly Usage](screenshots/day3.png)
 
 ### Day 4 - ATM Simulator & Debugging
-![Day 4 ATM Simulator Debug](HCLDailytasks/screenshots/day4.png)
+![Day 4 ATM Simulator Debug](screenshots/day4.png)
 
 ### Day 5 - Inheritance & Polymorphism
-![Day 5 Execution](HCLDailytasks/screenshots/day5.png)
----
+![Day 5 Inheritance](screenshots/day5.png)
 
 ## How to Run
 
