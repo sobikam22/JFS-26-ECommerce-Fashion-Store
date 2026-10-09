@@ -1,3 +1,5 @@
+package com.hcldailytask;
+
 public class TextAnalyzer {
     public static void main(String[] args) {
         String input = "Java Full Stack 2026 - Capstone Project!";

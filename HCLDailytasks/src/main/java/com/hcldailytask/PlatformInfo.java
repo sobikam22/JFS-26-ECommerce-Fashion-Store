@@ -1,3 +1,5 @@
+package com.hcldailytask;
+
 public class PlatformInfo {
     public static void main(String[] args) {
         System.out.println("=== Java Platform Information ===");

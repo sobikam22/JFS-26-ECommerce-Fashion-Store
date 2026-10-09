@@ -1,3 +1,5 @@
+package com.hcldailytask;
+
 public class MonthlyUsageAnalyser {
 
         public static void main(String[] args) {
