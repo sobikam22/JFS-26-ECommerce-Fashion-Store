@@ -1,5 +1,11 @@
+﻿# Compiled class files
+*.class
+
+# IDE folders
 .idea/
 *.iml
+.vscode/
+
+# Build outputs
+out/
 target/
-.DS_Store
-*.class
