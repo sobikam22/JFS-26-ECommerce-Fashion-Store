@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -34,5 +35,22 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
         ProductResponseDTO createdProduct = productService.saveProduct(requestDTO);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    }
+    // NEW FILTER & SEARCH ENDPOINTS ADDED HERE:
+    @GetMapping("/filter/category")
+    public ResponseEntity<List<ProductResponseDTO>> getByCategory(@RequestParam String category) {
+        return ResponseEntity.ok(productService.getProductsByCategory(category));
+    }
+
+    @GetMapping("/filter/price")
+    public ResponseEntity<List<ProductResponseDTO>> getByPriceRange(
+            @RequestParam BigDecimal min,
+            @RequestParam BigDecimal max) {
+        return ResponseEntity.ok(productService.getProductsByPriceRange(min, max));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponseDTO>> searchByName(@RequestParam String name) {
+        return ResponseEntity.ok(productService.searchProductsByName(name));
     }
 }

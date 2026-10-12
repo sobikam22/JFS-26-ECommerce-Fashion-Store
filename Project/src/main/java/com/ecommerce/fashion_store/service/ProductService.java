@@ -7,6 +7,7 @@ import com.ecommerce.fashion_store.model.Product;
 import com.ecommerce.fashion_store.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,24 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
         return mapToResponseDTO(savedProduct);
     }
+    // NEW FILTER & SEARCH METHODS
+    public List<ProductResponseDTO> getProductsByCategory(String category) {
+        return productRepository.findByCategory(category).stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    }
 
+    public List<ProductResponseDTO> getProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
+        return productRepository.findByPriceBetween(minPrice, maxPrice).stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductResponseDTO> searchProductsByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(this::mapToResponseDTO)
+                .collect(Collectors.toList());
+    }
     // Helper mapping methods
     private ProductResponseDTO mapToResponseDTO(Product product) {
         return new ProductResponseDTO(
