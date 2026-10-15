@@ -12,3 +12,4 @@ This directory contains the progressive daily task implementations completed as 
 | **Day 6** | Exception Handling & Recovery | Custom checked/unchecked exceptions, exception chaining, `finally` audit blocks | `InsufficientStockException.java`, `OrderProcessor.java` |
 | **Day 7** | Collections Framework | Dynamic lists (`ArrayList`), unique sets (`HashSet`), sorted trees (`TreeSet`, `Comparable`) | `Product.java`, `InventoryManager.java` |
 | **Day 8** | Maps & Java 8 Streams | Key-value dictionaries (`HashMap`), declarative filtering, revenue aggregation (`Streams`) | `Order.java`, `OrderAnalytics.java` |
+| Day 9 | Generics & Resource Management | Generic classes/methods, bounded types (`? extends`), `try-with-resources`, `AutoCloseable` | `GenericToolkit.java`, `InMemoryRepository.java`, `CSVDataLoader.java` |
