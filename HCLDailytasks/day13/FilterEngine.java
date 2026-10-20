@@ -1,90 +1,120 @@
-package day13;
+package day12;
 
 import java.util.*;
-import java.util.function.*;
 import java.util.stream.Collectors;
 
-// Sample Product Domain Model
-class Product {
-    private String name;
-    private double price;
-    private String category;
-    private boolean inStock;
-
-    public Product(String name, double price, String category, boolean inStock) {
-        this.name = name;
-        this.price = price;
-        this.category = category;
-        this.inStock = inStock;
-    }
-
-    public String getName() { return name; }
-    public double getPrice() { return price; }
-    public String getCategory() { return category; }
-    public boolean isInStock() { return inStock; }
-
-    @Override
-    public String toString() {
-        return String.format("Product[name=%s, price=%.2f, category=%s, inStock=%b]", name, price, category, inStock);
+class InsufficientStockException extends Exception {
+    public InsufficientStockException(String message) {
+        super(message);
     }
 }
 
-public class FilterEngine {
+class FashionProduct {
+    private String productId;
+    private String name;
+    private double price;
+    private int stockQuantity;
+    private String category;
 
-    // Composed Predicate filters
-    public static Predicate<Product> priceLessThan(double maxPrice) {
-        return p -> p.getPrice() < maxPrice;
+    public FashionProduct(String productId, String name, double price, int stockQuantity, String category) {
+        this.productId = productId;
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.category = category;
     }
 
-    public static Predicate<Product> categoryEquals(String category) {
-        return p -> p.getCategory().equalsIgnoreCase(category);
+    public String getProductId() { return productId; }
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public int getStockQuantity() { return stockQuantity; }
+    public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
+    public String getCategory() { return category; }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s - $%.2f (Stock: %d) [%s]", productId, name, price, stockQuantity, category);
+    }
+}
+
+public class ECommerceConsoleApp {
+    private static List<FashionProduct> catalog = new ArrayList<>();
+    private static Map<FashionProduct, Integer> cart = new HashMap<>();
+
+    public static void initializeCatalog() {
+        catalog.add(new FashionProduct("P001", "Silk Saree", 120.00, 10, "Apparel"));
+        catalog.add(new FashionProduct("P002", "Designer Kurti", 45.00, 25, "Apparel"));
+        catalog.add(new FashionProduct("P003", "Silver Jhumka", 25.00, 50, "Jewelry"));
+        catalog.add(new FashionProduct("P004", "Denim Jacket", 75.00, 2, "Apparel"));
     }
 
-    public static Predicate<Product> inStockOnly() {
-        return Product::isInStock; // Method reference
+    public static void browseCatalog(String categoryFilter, double maxPrice) {
+        System.out.println("\n--- Flow 1: Catalog Browsing & Filtering ---");
+        List<FashionProduct> filtered = catalog.stream()
+                .filter(p -> p.getCategory().equalsIgnoreCase(categoryFilter))
+                .filter(p -> p.getPrice() <= maxPrice)
+                .collect(Collectors.toList());
+
+        if (filtered.isEmpty()) {
+            System.out.println("No products found matching your criteria.");
+        } else {
+            filtered.forEach(System.out::println);
+        }
+    }
+
+    public static void addToCart(String productId, int quantity) throws InsufficientStockException {
+        FashionProduct product = catalog.stream()
+                .filter(p -> p.getProductId().equals(productId))
+                .findFirst()
+                .orElse(null);
+
+        if (product == null) {
+            System.out.println("Product not found: " + productId);
+            return;
+        }
+
+        if (product.getStockQuantity() < quantity) {
+            throw new InsufficientStockException("Error: Not enough stock for " + product.getName() + ". Available: " + product.getStockQuantity());
+        }
+
+        cart.put(product, cart.getOrDefault(product, 0) + quantity);
+        product.setStockQuantity(product.getStockQuantity() - quantity);
+        System.out.println("Successfully added " + quantity + " of " + product.getName() + " to cart.");
+    }
+
+    public static void checkout() {
+        System.out.println("\n--- Flow 2: Checkout & Order Summary ---");
+        if (cart.isEmpty()) {
+            System.out.println("Your cart is empty.");
+            return;
+        }
+
+        double totalAmount = 0.0;
+        for (Map.Entry<FashionProduct, Integer> entry : cart.entrySet()) {
+            FashionProduct p = entry.getKey();
+            int qty = entry.getValue();
+            double subtotal = p.getPrice() * qty;
+            totalAmount += subtotal;
+            System.out.printf("- %s (Qty: %d) : $%.2f\n", p.getName(), qty, subtotal);
+        }
+        System.out.printf("Total Order Amount: $%.2f\n", totalAmount);
+        System.out.println("Order placed successfully! Thank you for shopping.");
+        cart.clear();
     }
 
     public static void main(String[] args) {
-        List<Product> catalog = Arrays.asList(
-                new Product("Silk Saree", 2500.0, "Apparel", true),
-                new Product("Cotton Kurti", 800.0, "Apparel", true),
-                new Product("Denim Jeans", 1500.0, "Apparel", false),
-                new Product("Silver Jhumka", 450.0, "Jewelry", true)
-        );
+        initializeCatalog();
 
-        // 1. Predicate Composition: In-stock Apparel under 2000
-        Predicate<Product> vibrantApparelFilter = inStockOnly()
-                .and(categoryEquals("Apparel"))
-                .and(priceLessThan(2000.0));
+        browseCatalog("Apparel", 100.00);
 
-        System.out.println("--- Filtered Products ---");
-        List<Product> filtered = catalog.stream()
-                .filter(vibrantApparelFilter)
-                .collect(Collectors.toList());
+        System.out.println("\n--- Flow 2: Processing Cart Items ---");
+        try {
+            addToCart("P002", 2);
+            addToCart("P004", 5);
+        } catch (InsufficientStockException e) {
+            System.err.println("[Checkout Exception Caught] " + e.getMessage());
+        }
 
-        // 2. Consumer for Printing (Method Reference)
-        Consumer<Product> printer = System.out::println;
-        filtered.forEach(printer);
-
-        // 3. Function Chain for Transformation (Uppercase product names with pricing tag)
-        Function<Product, String> nameTransformer = p -> p.getName().toUpperCase();
-        Function<String, String> formatTag = name -> "ITEM: " + name;
-        Function<Product, String> finalFormatter = nameTransformer.andThen(formatTag);
-
-        System.out.println("\n--- Transformed Product Names ---");
-        catalog.stream()
-                .map(finalFormatter)
-                .forEach(System.out::println);
-
-        // 4. Supplier for Default Fallback Product
-        Supplier<Product> defaultProductSupplier = () -> new Product("Default Tee", 499.0, "Apparel", true);
-
-        System.out.println("\n--- Supplier Fallback ---");
-        Product fallback = catalog.stream()
-                .filter(p -> p.getPrice() > 5000.0)
-                .findFirst()
-                .orElseGet(defaultProductSupplier);
-
-        System.out.println(fallback);
+        checkout();
     }
 }
