@@ -17,3 +17,4 @@ This directory contains the progressive daily task implementations completed as 
 | **Day 11** | AI Integration & Code Review | Copilot prompting strategies, AI code review checklist, entity/repository generation, `AI-USAGE.md` | `AI-USAGE.md`, `StudentService.java`, Entity/Repository |
 | **Day 12** | Assessment 1 (Core Java Checkpoint) | 30-min warm-up quiz, 3-hr practical console app (2 core flows), tag `v1.0-core-java` | `AssessmentNotes.md`, `ECommerceConsoleApp.java` |
 | **Day 13** | Functional Programming | Lambdas, built-in functional interfaces (`Predicate`, `Function`, `Consumer`, `Supplier`), method references, custom `@FunctionalInterface`, `FilterEngine.java` | `FilterEngine.java`, refactored e-commerce strategy code |
+| **Day 14** | Streams API & Sales Analytics | Intermediate/terminal ops, Collectors (`groupingBy`, `partitioningBy`, `summarizing`, `joining`), parallel streams | `SalesAnalytics.java`, refactored reports |
